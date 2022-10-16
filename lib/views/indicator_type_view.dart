@@ -5,7 +5,7 @@ import 'package:stock_scan_parser/models/stocks_data_model.dart';
 class IndicatorTypeView extends StatelessWidget {
   IndicatorTypeView({super.key});
 
-  IndicatorType indicatorData = Get.arguments;
+  final IndicatorType indicatorData = Get.arguments;
 
   @override
   Widget build(BuildContext context) {

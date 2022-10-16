@@ -7,7 +7,7 @@ import '../utils/dotted_divider.dart';
 class ValueTypeView extends StatelessWidget {
   ValueTypeView({super.key});
 
-  ValueType valueData = Get.arguments;
+  final ValueType valueData = Get.arguments;
 
   @override
   Widget build(BuildContext context) {
