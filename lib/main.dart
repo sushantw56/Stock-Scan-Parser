@@ -25,7 +25,6 @@ class Root extends StatelessWidget {
       initialRoute: AppRoutes.home,
       getPages: listOfPages,
       theme: customTheme(),
-      home: const Scaffold(),
     );
   }
 }
