@@ -23,7 +23,6 @@ class StocksController extends GetxController {
         for (var element in data) {
           stocksList.add(StocksDataModel.fromJson(element));
         }
-        // stocksData.value = data;
       }
     } finally {
       isLoading(false);
