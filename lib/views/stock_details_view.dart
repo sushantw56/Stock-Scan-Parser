@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:stock_scan_parser/utils/routes.dart';
 
 import '../models/stocks_data_model.dart';
+import '../utils/routes.dart';
 
 class StockDetailsView extends StatelessWidget {
   StockDetailsView({super.key});
@@ -88,22 +88,55 @@ class StockDetailsView extends StatelessWidget {
 }
 
 class CriteriaWidget extends StatelessWidget {
-  const CriteriaWidget({
+  CriteriaWidget({
     Key? key,
     required this.criteria,
   }) : super(key: key);
 
   final Criterion criteria;
 
+  dynamic firstPassedArguments;
+
   List<TextSpan>? _textFunction(
       String text, String variable, String value, dynamic passedArguments) {
+    // if (firstPassedArguments != passedArguments) {
+    //   firstPassedArguments = passedArguments;
+    // }
     if (text.contains(variable)) {
       List<TextSpan> children = [];
       String preVariableText = text.substring(0, text.indexOf(variable));
       if (preVariableText.isNotEmpty) {
-        children.add(
-          TextSpan(text: preVariableText),
-        );
+        if (!preVariableText.contains('(')) {
+          children.add(
+            TextSpan(text: preVariableText),
+          );
+        } else {
+          String prePreVariableText = text.substring(0, text.indexOf('('));
+          String middleText =
+              text.substring(text.indexOf(')') + 1, text.indexOf('\$'));
+          children.add(TextSpan(text: prePreVariableText));
+          children.add(
+            TextSpan(
+              text: text.substring(text.indexOf('('), text.indexOf(')') + 1),
+              style: const TextStyle(
+                color: Colors.blue,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  // print(firstPassedArguments.runtimeType);
+                  Get.toNamed(
+                    firstPassedArguments.runtimeType.toString() == 'ValueType'
+                        ? AppRoutes.valueType
+                        : AppRoutes.indicatorType,
+                    arguments: firstPassedArguments,
+                  );
+                },
+            ),
+          );
+          children.add(TextSpan(text: middleText));
+        }
       }
       children.add(
         TextSpan(
@@ -115,7 +148,7 @@ class CriteriaWidget extends StatelessWidget {
           ),
           recognizer: TapGestureRecognizer()
             ..onTap = () {
-              // print(arguments.runtimeType);
+              // print(passedArguments.runtimeType);
               Get.toNamed(
                 passedArguments.runtimeType.toString() == 'ValueType'
                     ? AppRoutes.valueType
@@ -152,6 +185,7 @@ class CriteriaWidget extends StatelessWidget {
       List<TextSpan>? texts = [];
       String textAfterFirstVariable = criteria.text!;
       for (var element in keys) {
+        // print(textAfterFirstVariable);
         if (criteria.text != textAfterFirstVariable) {
           texts = _textFunction(
               textAfterFirstVariable,
@@ -175,6 +209,9 @@ class CriteriaWidget extends StatelessWidget {
         }
         textAfterFirstVariable =
             texts!.fold('', (prev, curr) => '$prev ${curr.text!}');
+        firstPassedArguments ??= criteria.variable![element]['type'] == 'value'
+            ? ValueType.fromJson(criteria.variable![element])
+            : IndicatorType.fromJson(criteria.variable![element]);
       }
       return RichText(
           text: TextSpan(
