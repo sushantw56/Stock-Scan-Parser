@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -70,16 +72,6 @@ class StockDetailsView extends StatelessWidget {
                 },
               ),
             ),
-            // Column(
-            //   crossAxisAlignment: CrossAxisAlignment.start,
-            //   children: stock.criteria!
-            //       .map(
-            //         (criteria) => CriteriaWidget(
-            //           criteria: criteria,
-            //         ),
-            //       )
-            //       .toList(),
-            // ),
           ],
         ),
       ),
@@ -99,9 +91,6 @@ class CriteriaWidget extends StatelessWidget {
 
   List<TextSpan>? _textFunction(
       String text, String variable, String value, dynamic passedArguments) {
-    // if (firstPassedArguments != passedArguments) {
-    //   firstPassedArguments = passedArguments;
-    // }
     if (text.contains(variable)) {
       List<TextSpan> children = [];
       String preVariableText = text.substring(0, text.indexOf(variable));
@@ -125,7 +114,6 @@ class CriteriaWidget extends StatelessWidget {
               ),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  // print(firstPassedArguments.runtimeType);
                   Get.toNamed(
                     firstPassedArguments.runtimeType.toString() == 'ValueType'
                         ? AppRoutes.valueType
@@ -148,7 +136,6 @@ class CriteriaWidget extends StatelessWidget {
           ),
           recognizer: TapGestureRecognizer()
             ..onTap = () {
-              // print(passedArguments.runtimeType);
               Get.toNamed(
                 passedArguments.runtimeType.toString() == 'ValueType'
                     ? AppRoutes.valueType
@@ -185,7 +172,6 @@ class CriteriaWidget extends StatelessWidget {
       List<TextSpan>? texts = [];
       String textAfterFirstVariable = criteria.text!;
       for (var element in keys) {
-        // print(textAfterFirstVariable);
         if (criteria.text != textAfterFirstVariable) {
           texts = _textFunction(
               textAfterFirstVariable,
